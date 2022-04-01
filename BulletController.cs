@@ -23,6 +23,7 @@ public class BulletController : MonoBehaviour
     public void OnTriggerEnter(Collider other)
     {
         CancelInvoke("SelfDestoy");
+        other.gameObject.SendMessage("ReceiveDamage", 5, SendMessageOptions.DontRequireReceiver);
         Destroy(this.gameObject);
     }
 }
