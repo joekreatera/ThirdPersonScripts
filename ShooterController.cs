@@ -12,7 +12,6 @@ public class ShooterController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
         player = this.gameObject;
     }
     public void Shoot() {
@@ -24,7 +23,6 @@ public class ShooterController : MonoBehaviour
     }
     public void Update()
     {
-
         if (isPlayerController) {
             if (Input.GetButtonDown("Fire1")) {
                 Shoot();
