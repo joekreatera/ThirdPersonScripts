@@ -24,7 +24,7 @@ public class StatsController : MonoBehaviour
     public void Update()
     {
         if (isBillboard) {
-            lifeImage.gameObject.transform.parent.parent.LookAt(player.transform.position);
+            lifeImage.gameObject.transform.LookAt(player.transform.position);
         }
     }
 
