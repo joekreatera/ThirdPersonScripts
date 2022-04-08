@@ -12,6 +12,11 @@ public class DynamicEnemy : MonoBehaviour
     public float CHASE_DISTANCE = 10;
     public float ATTACK_DISTANCE = 3;
 
+    float attackTimer = 0.0f;
+    public float ATTACK_TIME = 2.0f;
+    StatsController stats;
+
+
     public enum STATE {
         IDLE,
         CHASING,
@@ -26,7 +31,15 @@ public class DynamicEnemy : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         shooter = this.GetComponent<ShooterController>();
         controller = this.GetComponent<CharacterController>();
-        
+        stats = this.GetComponent<StatsController>();
+    }
+
+    public void UpdateState() {
+        if (stats != null) {
+            if (stats.GetLife() <= 0) {
+                state = STATE.DEAD;
+            }
+        }
     }
 
     void Shoot() {
@@ -34,9 +47,20 @@ public class DynamicEnemy : MonoBehaviour
         Invoke("Shoot", 3);
     }
 
+    public void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(this.transform.position, CHASE_DISTANCE);
+
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawWireSphere(this.transform.position, ATTACK_DISTANCE);
+    }
+
     // Update is called once per frame
     void Update()
     {
+        UpdateState();
+
         if (state == STATE.IDLE) {
             Vector3 distance = player.transform.position - this.transform.position;
             
@@ -72,9 +96,18 @@ public class DynamicEnemy : MonoBehaviour
         if (state == STATE.ATTACKING) {
             Debug.Log("Im attacking");
 
+            Vector3 posToLook = player.transform.position;
+            posToLook.y = this.transform.position.y;
+            this.transform.LookAt(posToLook);
+
             Vector3 distance = player.transform.position - this.transform.position;
 
-            player.SendMessage("ReceiveDamage", 2);
+
+            if (attackTimer >= ATTACK_TIME) {
+                player.SendMessage("ReceiveDamage", 2);
+                attackTimer = 0.0f;
+            }
+            attackTimer += Time.deltaTime;
 
             if (distance.magnitude > ATTACK_DISTANCE)
             {
