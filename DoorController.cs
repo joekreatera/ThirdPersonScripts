@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class DoorController : MonoBehaviour
 {
+
+    public int keyId;
     // Start is called before the first frame update
     void Start()
     {
@@ -15,4 +17,18 @@ public class DoorController : MonoBehaviour
     {
         
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("Player inside" + other.gameObject);
+        InventoryController inventory = other.gameObject.GetComponent<InventoryController>();
+
+        if (inventory != null) {
+            bool doOpen = inventory.GetKey(keyId);
+            if (doOpen) { 
+                Destroy(this.gameObject.transform.GetChild(0).gameObject);
+            }
+        }
+    }
+    
 }
