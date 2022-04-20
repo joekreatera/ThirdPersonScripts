@@ -25,10 +25,20 @@ public class DoorController : MonoBehaviour
 
         if (inventory != null) {
             bool doOpen = inventory.GetKey(keyId);
-            if (doOpen) { 
-                Destroy(this.gameObject.transform.GetChild(0).gameObject);
+            if (doOpen) {
+                this.gameObject.transform.GetChild(0).gameObject.SendMessage("Open");
             }
         }
     }
-    
+
+    private void OnTriggerExit(Collider other)
+    {
+        InventoryController inventory = other.gameObject.GetComponent<InventoryController>();
+
+        if (inventory != null)
+        {
+            this.gameObject.transform.GetChild(0).gameObject.SendMessage("Close");
+        }
+    }
+
 }
