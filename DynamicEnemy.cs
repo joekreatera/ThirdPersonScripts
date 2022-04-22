@@ -16,6 +16,7 @@ public class DynamicEnemy : MonoBehaviour
     public float ATTACK_TIME = 2.0f;
     StatsController stats;
 
+    public Animator animationController;
 
     public enum STATE {
         IDLE,
@@ -63,7 +64,8 @@ public class DynamicEnemy : MonoBehaviour
 
         if (state == STATE.IDLE) {
             Vector3 distance = player.transform.position - this.transform.position;
-            
+            animationController.SetFloat("MoveSpeed", 0.0f);
+            animationController.SetBool("OnAttack", false);
             if (distance.magnitude < CHASE_DISTANCE ) {
                 state = STATE.CHASING;
                 Shoot();
@@ -79,7 +81,8 @@ public class DynamicEnemy : MonoBehaviour
             controller.Move(dir * 0.2f);
 
             Vector3 distance = player.transform.position - this.transform.position;
-            
+            animationController.SetFloat("MoveSpeed", 1.0f);
+            animationController.SetBool("OnAttack", false);
 
             if (distance.magnitude < ATTACK_DISTANCE)
             {
@@ -95,6 +98,9 @@ public class DynamicEnemy : MonoBehaviour
 
         if (state == STATE.ATTACKING) {
             Debug.Log("Im attacking");
+
+            // animationController.SetFloat("MoveSpeed", 0.0f);
+            animationController.SetBool("OnAttack", true);
 
             Vector3 posToLook = player.transform.position;
             posToLook.y = this.transform.position.y;
@@ -117,7 +123,7 @@ public class DynamicEnemy : MonoBehaviour
         }
 
         if (state == STATE.DEAD) {
-
+            animationController.SetTrigger("IsDead");
         }
         
     }
